@@ -1,0 +1,63 @@
+@import 'math';
+
+$colors: (
+  (name: 'red', light: rgb(231, 76, 60), dark: rgb(192, 57, 43)),
+  (name: 'orange', light: rgb(230, 126, 34), dark: rgb(211, 84, 0)),
+  (name: 'yellow', light: rgb(241, 196, 15), dark: rgb(243, 156, 18)),
+  (name: 'green', light: rgb(46, 204, 113), dark: rgb(39, 174, 96)),
+  (name: 'cyan', light: rgb(26, 188, 156), dark: rgb(22, 160, 133)),
+  (name: 'blue', light: rgb(52, 152, 219), dark: rgb(41, 128, 185)),
+  (name: 'violet', light: rgb(155, 89, 182), dark: rgb(142, 68, 173))
+);
+
+$length: length($colors);
+$angle: 360deg / $length;
+
+.panel {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 640px;
+
+  &__button {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    box-shadow: inset 4px 4px 16px 0 rgba(255, 255, 255, 0.2), inset -4px -4px 16px 0 rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    text-indent: 100%;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__item {
+    position: absolute;
+    padding-top: 40%;
+    @include transform(translate(-50%, -50%));
+    width: 40%;
+
+    @each $color in $colors {
+      $dark: map-get($color, 'dark');
+      $index: index($colors, $color);
+      $light: map-get($color, 'light');
+      $name: map-get($color, 'name');
+
+      &--#{$name} {
+        top: cos($angle * $index) * 50%;
+        left: sin($angle * $index) * 50%;
+
+        .panel__button {
+          background-color: $light;
+          background-image: radial-gradient(circle at 30% 30%, $light, $dark);
+        }
+      }
+    }
+  }
+
+  &__list {
+    position: relative;
+    padding-top: 50%;
+    @include transform(translate(100%, 100%));
+    width: 50%;
+  }
+}

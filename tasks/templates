@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+. tasks/library
+
+main() {
+  node_modules/html-minifier/cli.js --collapse-whitespace --output index.html --remove-comments templates/main.html
+}
+
+header
+main &> $TASK_LOG
+footer

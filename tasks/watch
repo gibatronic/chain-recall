@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+node_modules/vigilia/bin/vigilia 'scripts/**/*.js':'make scripts' \
+                                 'styles/**/*.scss':'make styles' \
+                                 'templates/**/*.html':'make templates'

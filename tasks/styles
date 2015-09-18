@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+. tasks/library
+
+main() {
+  node_modules/node-sass/bin/node-sass --include-path node_modules/bourbon/app/assets/stylesheets --output public/styles --output-style compressed 'styles/main.scss' 'main.css'
+}
+
+header
+main &> $TASK_LOG
+footer
