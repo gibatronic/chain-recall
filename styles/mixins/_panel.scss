@@ -15,10 +15,18 @@ $colors: (
 $length: length($colors);
 $angle: 360deg / $length;
 
+.hidden {
+  display: none;
+}
+
 .panel {
   margin: 0 auto;
   width: 100%;
   max-width: 640px;
+
+  &--disabled .panel__button--color {
+    cursor: default;
+  }
 
   &__button {
     position: absolute;
@@ -47,11 +55,6 @@ $angle: 360deg / $length;
         width: auto;
         height: auto;
       }
-
-      &:hover::before {
-        opacity: 1;
-        @include transition(opacity 0.025s);
-      }
     }
 
     &--start {
@@ -59,7 +62,7 @@ $angle: 360deg / $length;
       left: 50%;
       background-image: radial-gradient(circle at 30% 30%, rgb(255, 255, 255), rgb(236, 240, 241));
       border-radius: 10rem;
-      opacity: 0.9;
+      opacity: 0.85;
       @include transform(translate(-50%, -50%));
       @include transition(opacity 0.1s);
       width: 40%;
@@ -78,9 +81,15 @@ $angle: 360deg / $length;
         height: 0;
       }
 
-      &:hover {
+      &:not(:disabled):hover {
         opacity: 1;
       }
+    }
+
+    &:not(:disabled):hover::before,
+    &--active::before {
+      opacity: 1;
+      @include transition(opacity 0.025s);
     }
   }
 
