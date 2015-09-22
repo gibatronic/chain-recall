@@ -13,7 +13,7 @@
 .SILENT:
 
 # generate assets
-build: images scripts styles templates
+build: scripts styles templates
 
 # show some help
 help:
