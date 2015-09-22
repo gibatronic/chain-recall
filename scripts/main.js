@@ -81,6 +81,30 @@ var main = function() {
   cache();
   setup();
   bind();
+
+  var header = $('.header');
+
+  new Sequenza({
+    callback: function() {
+      header.classList.remove('header--step-0');
+      header.classList.add('header--step-1');
+    },
+    delay: 200
+  }, {
+    callback: function() {
+      header.classList.remove('header--step-1');
+      header.classList.add('header--step-2');
+    },
+    delay: 200
+  }, {
+    delay: 200
+  }, {
+    callback: function() {
+      header.classList.remove('header--step-2');
+      header.classList.add('header--step-3');
+    },
+    delay: 200
+  }).start();
 };
 
 var playColor = function(color) {

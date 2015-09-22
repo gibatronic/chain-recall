@@ -1,0 +1,75 @@
+.header {
+  position: relative;
+  margin-top: 2rem;
+
+  &__title {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    @include transition(all 0.2s);
+    height: 1.5625rem;
+
+    &--chain {
+      transform: translateX(-100%);
+      width: 6.75rem;
+      z-index: 10;
+    }
+
+    &--recall {
+      width: 7.9375rem;
+      z-index: 5;
+    }
+  }
+
+  &--step- {
+    &0 {
+      .header__title--chain {
+        fill: rgb(241, 196, 15);
+        opacity: 0;
+      }
+
+      .header__title--recall {
+        fill: rgb(52, 152, 219);
+        @include prefixer(clip-path, polygon(100% 0, 100% 0, 96% 100%, 96% 100%), webkit spec);
+        @include transform(translateX(-100%));
+      }
+    }
+
+    &1 {
+      .header__title--chain {
+        fill: rgb(241, 196, 15);
+        opacity: 1;
+      }
+
+      .header__title--recall {
+        fill: rgb(52, 152, 219);
+        @include prefixer(clip-path, polygon(100% 0, 100% 0, 96% 100%, 96% 100%), webkit spec);
+        @include transform(translateX(-100%));
+      }
+    }
+
+    &2 {
+      .header__title--chain {
+        fill: rgb(241, 196, 15);
+      }
+
+      .header__title--recall {
+        fill: rgb(52, 152, 219);
+        @include prefixer(clip-path, polygon(100% 0, 4% 0, 0 100%, 100% 100%), webkit spec);
+        @include transform(translateX(-0.71875rem));
+      }
+    }
+
+    &3 {
+      .header__title--chain {
+        fill: rgb(255, 255, 255);
+      }
+
+      .header__title--recall {
+        fill: rgb(255, 255, 255);
+        @include prefixer(clip-path, polygon(100% 0, 4% 0, 0 100%, 100% 100%), webkit spec);
+        @include transform(translateX(-0.71875rem));
+      }
+    }
+  }
+}
