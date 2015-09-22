@@ -20,12 +20,14 @@ button, ol, ul {
   padding: 0;
 }
 
-ol, ul {
-  list-style-type: none;
+button, html {
+  color: rgb(255, 255, 255);
+  font-family: $helvetica;
+  line-height: $golden;
 }
 
-body {
-  background: rgb(255, 255, 255);
+ol, ul {
+  list-style-type: none;
 }
 
 button {
@@ -36,9 +38,6 @@ button {
 }
 
 html {
-  color: rgb(0, 0, 0);
-  font-family: $helvetica;
+  background-color: rgb(51, 51, 51);
   font-size: 16px;
-  line-height: $golden;
-  -webkit-font-smoothing: antialiased;
 }

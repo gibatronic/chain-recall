@@ -1,4 +1,5 @@
 var dollar = require('./dollar');
+var Sequenza = require('Sequenza');
 
 var $ = dollar.$;
 var $$ = dollar.$$;
@@ -6,53 +7,20 @@ var colors;
 var position;
 var sequence;
 
-var $colorBlue;
-var $colorCyan;
-var $colorGreen;
-var $colorOrange;
-var $colorRed;
-var $colors;
-var $colorViolet;
-var $colorYellow;
-var $itens;
-var $panel;
-var $start;
-
 var activateColor = function(color) {
-  color.classList.add('panel__button--active');
+  color.classList.add('panel__color--active');
 };
 
 var bind = function() {
-  $colors.forEach(bindColors);
-  $start.addEventListener('click', start);
+  colors.forEach(bindColors);
 };
 
 var bindColors = function(color) {
-  color.addEventListener('click', check);
+  color.addEventListener('click', playColor.bind(window, color));
 };
 
 var cache = function() {
-  $colorBlue = $('.panel__item--blue .panel__button--color');
-  $colorCyan = $('.panel__item--cyan .panel__button--color');
-  $colorGreen = $('.panel__item--green .panel__button--color');
-  $colorOrange = $('.panel__item--orange .panel__button--color');
-  $colorRed = $('.panel__item--red .panel__button--color');
-  $colors = $$('.panel__item .panel__button--color');
-  $colorViolet = $('.panel__item--violet .panel__button--color');
-  $colorYellow = $('.panel__item--yellow .panel__button--color');
-  $itens = $$('.panel__item');
-  $panel = $('.panel');
-  $start = $('.panel__button--start');
-
-  colors = [
-    $colorBlue,
-    $colorCyan,
-    $colorGreen,
-    $colorOrange,
-    $colorRed,
-    $colorViolet,
-    $colorYellow
-  ];
+  colors = $$('.panel__color');
 };
 
 var check = function(event) {
@@ -77,12 +45,12 @@ var chooseRandomColor = function() {
 };
 
 var deactivateColor = function(color) {
-  color.classList.remove('panel__button--active');
+  color.classList.remove('panel__color--active');
 };
 
 var disable = function() {
   $panel.classList.add('panel--disabled');
-  $colors.forEach(disableColors);
+  colors.forEach(disableColors);
 };
 
 var disableColors = function(color) {
@@ -91,7 +59,7 @@ var disableColors = function(color) {
 
 var enable = function() {
   $panel.classList.remove('panel--disabled');
-  $colors.forEach(enableColors);
+  colors.forEach(enableColors);
 };
 
 var enableColors = function(color) {
@@ -109,12 +77,17 @@ var main = function() {
 };
 
 var playColor = function(color) {
-  activateColor(color);
+  var stepActivateColor = {
+    callback: activateColor.bind(window, color),
+    delay: 0
+  };
 
-  window.setTimeout(function() {
-    deactivateColor(color);
-    window.setTimeout(playSequence, 400);
-  }, 200);
+  var stepDeactivateColor = {
+    callback: deactivateColor.bind(window, color),
+    delay: 150
+  };
+
+  new Sequenza(stepActivateColor, stepDeactivateColor).start();
 };
 
 var playSequence = function() {
