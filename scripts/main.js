@@ -3,7 +3,13 @@ var Sequenza = require('Sequenza');
 
 var $ = dollar.$;
 var $$ = dollar.$$;
+var audioContext = new (window.AudioContext || window.webkitAudioContext)();
+var beepBase = 250;
+var beepLength = 0.3;
+var beepMultiplier = 1000;
+var beepVolume = 0.2;
 var colors;
+var gain = audioContext.createGain();
 var position;
 var sequence;
 
@@ -73,21 +79,39 @@ var incrementSequence = function() {
 
 var main = function() {
   cache();
+  setup();
   bind();
 };
 
 var playColor = function(color) {
-  var stepActivateColor = {
+  var currentTime = audioContext.currentTime;
+
+  gain.gain.setValueAtTime(beepVolume, currentTime);
+  gain.gain.linearRampToValueAtTime(0, currentTime + beepLength);
+
+  color.dataset
+       .token
+       .split(',')
+       .forEach(playToken);
+
+  new Sequenza({
     callback: activateColor.bind(window, color),
     delay: 0
-  };
-
-  var stepDeactivateColor = {
+  }, {
     callback: deactivateColor.bind(window, color),
-    delay: 150
-  };
+    delay: 100
+  }).start();
+};
 
-  new Sequenza(stepActivateColor, stepDeactivateColor).start();
+var playToken = function(token) {
+  var currentTime = audioContext.currentTime;
+  var oscillator = audioContext.createOscillator();
+
+  oscillator.type = 'sine';
+  oscillator.frequency.value = (token * beepMultiplier) + beepBase;
+  oscillator.connect(gain);
+  oscillator.start(currentTime);
+  oscillator.stop(currentTime + beepLength);
 };
 
 var playSequence = function() {
@@ -99,6 +123,10 @@ var playSequence = function() {
 
   playColor(sequence[position]);
   position++;
+};
+
+var setup = function() {
+  gain.connect(audioContext.destination);
 };
 
 var start = function() {
