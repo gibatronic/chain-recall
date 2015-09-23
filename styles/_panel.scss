@@ -25,6 +25,7 @@ $angle: 360deg / $length;
     line-height: 0;
     padding-top: 40%;
     @include transform(translate(-50%, -50%));
+    @include transition(all 0.2s);
     white-space: nowrap;
     width: 40%;
 
@@ -78,5 +79,20 @@ $angle: 360deg / $length;
     padding-top: 50%;
     @include transform(translate(100%, 100%));
     width: 50%;
+  }
+
+  &--step- {
+    &0 {
+      .panel__color {
+        opacity: 0;
+        pointer-events: none;
+      }
+    }
+
+    &1 {
+      .panel__color {
+        opacity: 1;
+      }
+    }
   }
 }

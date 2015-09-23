@@ -1,6 +1,7 @@
 var dollar = require('./dollar');
 var Sequenza = require('Sequenza');
 
+var $ = dollar.$;
 var $$ = dollar.$$;
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 var beepBase = 200;
@@ -26,6 +27,7 @@ var bindColors = function(color) {
 
 var cache = function() {
   colors = $$('.panel__color');
+  panel = $('.panel');
 };
 
 var check = function(event) {
@@ -80,6 +82,7 @@ var main = function() {
   cache();
   setup();
   bind();
+  show();
 };
 
 var playColor = function(color) {
@@ -130,6 +133,24 @@ var setup = function() {
   gain.connect(audioContext.destination);
 };
 
+var show = function() {
+  new Sequenza({
+    callback: showStep1,
+    delay: 800
+  }, {
+    callback: showStep2,
+    delay: 200
+  }).start();
+};
+
+var showStep1 = function() {
+  switchStep(0, 1);
+};
+
+var showStep2 = function() {
+  switchStep(1, 2);
+};
+
 var start = function() {
   $start.classList.add('hidden');
 
@@ -137,6 +158,11 @@ var start = function() {
 
   incrementSequence();
   window.setTimeout(playSequence, 200);
+};
+
+var switchStep = function(from, to) {
+  panel.classList.remove('panel--step-' + from);
+  panel.classList.add('panel--step-' + to);
 };
 
 module.exports = main;
