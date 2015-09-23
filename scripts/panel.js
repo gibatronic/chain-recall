@@ -3,7 +3,7 @@ var Sequenza = require('Sequenza');
 
 var $$ = dollar.$$;
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-var beepBase = 250;
+var beepBase = 200;
 var beepLength = 0.3;
 var beepMultiplier = 1000;
 var beepVolume = 0.2;
@@ -103,15 +103,16 @@ var playColor = function(color) {
   }).start();
 };
 
-var playToken = function(token) {
+var playToken = function(token, index) {
   var currentTime = audioContext.currentTime;
+  var offset = index * 0.025;
   var oscillator = audioContext.createOscillator();
 
   oscillator.type = 'sine';
   oscillator.frequency.value = (token * beepMultiplier) + beepBase;
   oscillator.connect(gain);
-  oscillator.start(currentTime);
-  oscillator.stop(currentTime + beepLength);
+  oscillator.start(currentTime + offset);
+  oscillator.stop(currentTime + offset + beepLength);
 };
 
 var playSequence = function() {
