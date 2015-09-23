@@ -3,22 +3,23 @@ var Sequenza = require('Sequenza');
 
 var $ = dollar.$;
 var $$ = dollar.$$;
+var $colors;
+var $panel;
+var $start;
 var audioContext = new (window.AudioContext || window.webkitAudioContext)();
 var beepBase = 200;
 var beepLength = 0.3;
 var beepMultiplier = 1000;
 var beepVolume = 0.2;
-var colors;
 var gain = audioContext.createGain();
-var position;
-var sequence;
 
 var activateColor = function(color) {
   color.classList.add('panel__color--active');
 };
 
 var bind = function() {
-  colors.forEach(bindColors);
+  $colors.forEach(bindColors);
+  $start.addEventListener('click', start);
 };
 
 var bindColors = function(color) {
@@ -26,56 +27,13 @@ var bindColors = function(color) {
 };
 
 var cache = function() {
-  colors = $$('.panel__color');
-  panel = $('.panel');
-};
-
-var check = function(event) {
-  var clickedColor = event.currentTarget;
-  var expectedColor = sequence[position];
-
-  if (clickedColor != expectedColor) {
-    return window.alert('damn uh oh');
-  }
-
-  if (position < sequence.length - 1) {
-    return position++;
-  }
-
-  disable();
-  incrementSequence();
-  window.setTimeout(playSequence, 400);
-};
-
-var chooseRandomColor = function() {
-  return colors[Math.random() * colors.length >> 0];
+  $colors = $$('.panel__color');
+  $panel = $('.panel');
+  $start = $('.panel__start');
 };
 
 var deactivateColor = function(color) {
   color.classList.remove('panel__color--active');
-};
-
-var disable = function() {
-  $panel.classList.add('panel--disabled');
-  colors.forEach(disableColors);
-};
-
-var disableColors = function(color) {
-  color.disabled = true;
-};
-
-var enable = function() {
-  $panel.classList.remove('panel--disabled');
-  colors.forEach(enableColors);
-};
-
-var enableColors = function(color) {
-  color.disabled = false;
-};
-
-var incrementSequence = function() {
-  position = 0;
-  sequence.push(chooseRandomColor());
 };
 
 var main = function() {
@@ -118,17 +76,6 @@ var playToken = function(token, index) {
   oscillator.stop(currentTime + offset + beepLength);
 };
 
-var playSequence = function() {
-  if (position > sequence.length - 1) {
-    position = 0;
-    enable();
-    return;
-  }
-
-  playColor(sequence[position]);
-  position++;
-};
-
 var setup = function() {
   gain.connect(audioContext.destination);
 };
@@ -152,17 +99,12 @@ var showStep2 = function() {
 };
 
 var start = function() {
-  $start.classList.add('hidden');
-
-  sequence = [ ];
-
-  incrementSequence();
-  window.setTimeout(playSequence, 200);
+  console.log('start');
 };
 
 var switchStep = function(from, to) {
-  panel.classList.remove('panel--step-' + from);
-  panel.classList.add('panel--step-' + to);
+  $panel.classList.remove('panel--step-' + from);
+  $panel.classList.add('panel--step-' + to);
 };
 
 module.exports = main;
