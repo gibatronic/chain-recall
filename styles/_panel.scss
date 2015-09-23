@@ -14,7 +14,9 @@ $length: length($colors);
 $angle: 360deg / $length;
 
 .panel {
+  position: relative;
   margin: 0 auto;
+  @include transition(opacity 0.2s);
   width: 100%;
   max-width: 640px;
 
@@ -25,7 +27,6 @@ $angle: 360deg / $length;
     line-height: 0;
     padding-top: 40%;
     @include transform(translate(-50%, -50%));
-    @include transition(all 0.2s);
     white-space: nowrap;
     width: 40%;
 
@@ -74,6 +75,13 @@ $angle: 360deg / $length;
     }
   }
 
+  &__control {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    @include transform(translate(-50%, -50%));
+  }
+
   &__list {
     position: relative;
     padding-top: 50%;
@@ -81,18 +89,22 @@ $angle: 360deg / $length;
     width: 50%;
   }
 
+  &__start {
+    font-size: 1.5rem;
+    font-style: italic;
+    font-weight: 200;
+    letter-spacing: 0.0625rem;
+    text-transform: uppercase;
+  }
+
   &--step- {
     &0 {
-      .panel__color {
-        opacity: 0;
-        pointer-events: none;
-      }
+      opacity: 0;
+      pointer-events: none;
     }
 
     &1 {
-      .panel__color {
-        opacity: 1;
-      }
+      opacity: 1;
     }
   }
 }
