@@ -85,6 +85,7 @@ var main = function() {
 var playColor = function(color) {
   var currentTime = audioContext.currentTime;
 
+  gain.gain.cancelScheduledValues(currentTime);
   gain.gain.setValueAtTime(beepVolume, currentTime);
   gain.gain.linearRampToValueAtTime(0, currentTime + beepLength);
 
