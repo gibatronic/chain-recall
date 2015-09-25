@@ -1,3 +1,4 @@
+var Color = require('./color');
 var dollar = require('./dollar');
 var Sequenza = require('Sequenza');
 
@@ -6,24 +7,18 @@ var $$ = dollar.$$;
 var $colors;
 var $panel;
 var $start;
-var audioContext = new (window.AudioContext || window.webkitAudioContext)();
-var beepBase = 200;
-var beepLength = 0.3;
-var beepMultiplier = 1000;
-var beepVolume = 0.2;
-var gain = audioContext.createGain();
-
-var activateColor = function(color) {
-  color.classList.add('panel__color--active');
-};
+var colors;
+var position;
+var sequence = [ ];
+var watching = false;
 
 var bind = function() {
+  var bindColors = function($color) {
+    $color.addEventListener('click', checkColor.bind(window, $color));
+  };
+
   $colors.forEach(bindColors);
   $start.addEventListener('click', start);
-};
-
-var bindColors = function(color) {
-  color.addEventListener('click', playColor.bind(window, color));
 };
 
 var cache = function() {
@@ -32,75 +27,90 @@ var cache = function() {
   $start = $('.panel__start');
 };
 
-var deactivateColor = function(color) {
-  color.classList.remove('panel__color--active');
+var checkColor = function($color) {
+  if (!watching) {
+    return;
+  }
+
+  if (sequence[position].$color != $color) {
+    return alert('nuh uh');
+  }
+
+  if (position == sequence.length - 1) {
+    return new Sequenza({
+      callback: pushAndPlay,
+      delay: 400
+    }).start();
+  }
+
+  position++;
 };
 
 var main = function() {
   cache();
-  setup();
   bind();
+  setup();
   show();
 };
 
-var playColor = function(color) {
-  var currentTime = audioContext.currentTime;
+var pushAndPlay = function() {
+  var sequenza = new Sequenza();
 
-  gain.gain.cancelScheduledValues(currentTime);
-  gain.gain.setValueAtTime(beepVolume, currentTime);
-  gain.gain.linearRampToValueAtTime(0, currentTime + beepLength);
+  var playColor = function(color) {
+    sequenza.queue({
+      callback: color.play.bind(color),
+      delay: 400
+    });
+  };
 
-  color.dataset
-       .token
-       .split(',')
-       .forEach(playToken);
+  sequenza.queue({
+    delay: 200
+  });
 
-  new Sequenza({
-    callback: activateColor.bind(window, color),
+  sequence.push(colors[Math.random() * colors.length >> 0]);
+  sequence.forEach(playColor);
+
+  sequenza.queue({
+    callback: startWatching,
     delay: 0
-  }, {
-    callback: deactivateColor.bind(window, color),
-    delay: 100
-  }).start();
-};
+  });
 
-var playToken = function(token, index) {
-  var currentTime = audioContext.currentTime;
-  var offset = index * 0.025;
-  var oscillator = audioContext.createOscillator();
-
-  oscillator.type = 'sine';
-  oscillator.frequency.value = (token * beepMultiplier) + beepBase;
-  oscillator.connect(gain);
-  oscillator.start(currentTime + offset);
-  oscillator.stop(currentTime + offset + beepLength);
+  sequenza.start();
 };
 
 var setup = function() {
-  gain.connect(audioContext.destination);
+  var setupColors = function($color) {
+    return new Color($color);
+  };
+
+  colors = $colors.map(setupColors);
 };
 
 var show = function() {
   new Sequenza({
-    callback: showStep1,
+    callback: switchStep.bind(window, 0, 1),
     delay: 800
   }, {
-    callback: showStep2,
+    callback: switchStep.bind(window, 1, 2),
     delay: 200
   }).start();
 };
 
-var showStep1 = function() {
-  switchStep(0, 1);
-};
-
-var showStep2 = function() {
-  switchStep(1, 2);
-};
-
 var start = function() {
-  console.log('start');
+  $start.classList.add('hidden');
+  $start.disabled = true;
+
+  pushAndPlay();
 };
+
+var startWatching = function() {
+  position = 0;
+  watching = true;
+}
+
+var stopWatching = function() {
+  watching = false;
+}
 
 var switchStep = function(from, to) {
   $panel.classList.remove('panel--step-' + from);
